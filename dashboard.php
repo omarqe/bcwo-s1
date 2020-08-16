@@ -1,5 +1,6 @@
 <?php
 require( __DIR__ . "/includes/load.php" );
+// requireAuth();
 ?>
 
 <!DOCTYPE html>

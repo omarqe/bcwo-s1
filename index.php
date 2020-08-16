@@ -1,5 +1,17 @@
 <?php
 require( __DIR__ . "/includes/load.php" );
+
+if ($_POST) {
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+
+    if (login($username, $password)) {
+        header("Location: /dashboard.php");
+        exit;
+    }
+    
+    exit("Invalid username/password.");
+}
 ?>
 
 <!DOCTYPE html>
@@ -19,9 +31,9 @@ require( __DIR__ . "/includes/load.php" );
                     <div class="logo">
                         <img src="/images/logo.svg" alt="Logo">
                     </div>
-                    <form class="form">
+                    <form class="form" method="post">
                         <div class="field">
-                            <input type="text" placeholder="Username">
+                            <input type="text" name="username" placeholder="Username">
                         </div>
                         <div class="field">
                             <input type="password" name="password" id="password" placeholder="••••••">

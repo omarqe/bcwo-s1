@@ -14,6 +14,10 @@ class Database {
         }
     }
 
+    public function mysqli() {
+        return $this->mysqli;
+    }
+
     public function createTables() {
         $statements = [
             "CREATE TABLE user ("
