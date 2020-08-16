@@ -1,3 +1,7 @@
+<?php
+require( __DIR__ . "/includes/load.php" );
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
