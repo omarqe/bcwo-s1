@@ -47,9 +47,58 @@ class Database {
     public function getPlaces() {
     }
 
-    public function addPlace($firstname, $lastname) {
+    public function getPlace($id) {
+        // $result = $this->mysqli->prepare("SELECT * FROM places WHERE id = ?");
+        // $result->bind_param("s", $id);
+        // $result->execute();
+
+        // Unsecured statement!! Prone to SQL injection!
+        $result = $this->mysqli->query("SELECT * FROM places WHERE id = '$id'");
+        
+        // Place not found!
+        if ($result->num_rows < 1) {
+            return [];
+        }
+
+        $data = $result->fetch_assoc();
+        return [
+            "id" => $data["id"],
+            "name" => $data["place_name"],
+            "location" => $data["place_location"],
+        ];
     }
 
-    public function deletePlace() {
+    public function addPlace($name, $location) {
+        if (empty($name) || empty($location)) {
+            exit( "Name or location is empty" );
+        }
+
+        $have_mail = 0;
+        $stmt = $this->mysqli->prepare("INSERT INTO places (place_name, place_location, have_mail) VALUES (?, ?, ?)");
+        $stmt->bind_param("ssd", $name, $location, $have_mail);
+        
+        if ($stmt->execute()) {
+            header("Location: /dashboard.php?success=true");
+            exit;
+        }
+
+        exit($this->mysqli->error);
+    }
+
+    public function updatePlace($id, $name, $location) {
+        if (empty($id) || empty($name) || empty($location)) {
+            exit( "ID, name or location is empty" );
+        }
+
+        $have_mail = 0;
+        $stmt = $this->mysqli->prepare("UPDATE places SET place_name = ?, place_location = ?, have_mail = ? WHERE id = ?");
+        $stmt->bind_param("ssdd", $name, $location, $have_mail, $id);
+
+        if ($stmt->execute()) {
+            header("Location: /dashboard.php?updated=true");
+            exit;
+        }
+
+        exit($this->mysqli->error);
     }
 }

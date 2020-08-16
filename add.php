@@ -1,6 +1,28 @@
 <?php
 require( __DIR__ . "/includes/load.php" );
 // requireAuth();
+
+if (isset($_POST["place_name"])) {
+    if (isset($_GET["id"])) {
+        $db->updatePlace($_GET["id"], $_POST["place_name"], $_POST["location"]);
+    } else {
+        $db->addPlace($_POST["place_name"], $_POST["location"]);
+    }
+}
+
+// For update, we get the data from the database based on
+// the ID provided from the URL query. Example: /add.php?id=1
+if (isset($_GET["id"])) {
+    $place = $db->getPlace($_GET["id"]);
+
+    $id = isset($place["id"]) ? $place["id"] : "";
+    $place_name = isset($place["name"]) ? $place["name"] : "";
+    $place_location = isset($place["location"]) ? $place["location"] : "";
+} else {
+    $id = "";
+    $place_name = "";
+    $place_location = "";
+}
 ?>
 
 <!DOCTYPE html>
@@ -42,13 +64,13 @@ require( __DIR__ . "/includes/load.php" );
             <div class="content">
                 <form method="post">
                     <div class="field">
-                        <label for="building">Building Name</label>
-                        <input type="text" name="building_name" id="building">
+                        <label for="place_name">Place Name</label>
+                        <input type="text" name="place_name" id="place_name" value="<?= $place_name; ?>">
                     </div>
 
                     <div class="field">
                         <label for="location">Location</label>
-                        <input type="text" name="location" id="location">
+                        <input type="text" name="location" id="location" value="<?= $place_location; ?>">
                     </div>
 
                     <div class="field" style="text-align:right">

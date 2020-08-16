@@ -1,6 +1,18 @@
 <?php
 require( __DIR__ . "/includes/load.php" );
 // requireAuth();
+
+$places = [];
+$stmt = $db->mysqli()->query("SELECT * FROM places ORDER BY place_name");
+if ($stmt->num_rows > 0) {
+    while ($data = $stmt->fetch_assoc()) {
+        $id = $data["id"];
+        $name = $data["place_name"];
+        $location = $data["place_location"];
+
+        $places[$id] = compact("id", "name", "location");
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -39,36 +51,47 @@ require( __DIR__ . "/includes/load.php" );
                 </div>
             </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>UNIT/BUILDING NAME</th>
-                        <th>LOCATION</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Swiss Suite</td>
-                        <td>Bangsar, Kuala Lumpur</td>
-                        <td style="text-align: right"></td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Swiss Suite</td>
-                        <td>Bangsar, Kuala Lumpur</td>
-                        <td style="text-align: right"></td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Swiss Suite</td>
-                        <td>Bangsar, Kuala Lumpur</td>
-                        <td style="text-align: right"></td>
-                    </tr>
-                </tbody>
-            </table>
+            <?php if (isset($_GET["success"]) && $_GET["success"] == true): ?>
+                <div style="padding: 8px 25px; background-color:#158467; color:white">
+                    New place has been added!
+                </div>
+            <?php elseif (isset($_GET["updated"]) && $_GET["updated"] == true): ?>
+                <div style="padding: 8px 25px; background-color:#158467; color:white">
+                    The place has been updated!
+                </div>
+            <?php endif; ?>
+
+            <?php if (empty($places)): ?>
+                <div class="content" style="display:flex; height:300px; align-items:center; justify-content:center">
+                    No places added yet.
+                </div>
+            <?php else: ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>UNIT/BUILDING NAME</th>
+                            <th>LOCATION</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($places as $id => $place): ?>
+                            <tr>
+                                <td><?= $id; ?></td>
+                                <td><?= $place["name"] ?></td>
+                                <td><?= $place["location"] ?></td>
+                                <td style="text-align: right">
+                                    <a href="<?= "/add.php?id=$id" ?>">Edit</a>
+                                    <a href="<?= "/delete.php?id=$id" ?>" style="color:red; display:inline-block; margin-left: 5px">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
         </div>
     </div>
 </body>
