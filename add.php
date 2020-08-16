@@ -62,6 +62,14 @@ if (isset($_GET["id"])) {
             </div>
 
             <div class="content">
+                <div style="padding:25px; margin-bottom: 25px; text-align:center">
+                    <img
+                        alt="qr code"
+                        src="<?= getQR($id); ?>"
+                        >
+                    <div>Scan me</div>
+                </div>
+
                 <form method="post">
                     <div class="field">
                         <label for="place_name">Place Name</label>

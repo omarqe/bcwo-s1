@@ -28,3 +28,7 @@ function requireAuth() {
         exit;
     }
 }
+
+function getQR($id) {
+    return "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost/doi.php?id=$id";
+}
